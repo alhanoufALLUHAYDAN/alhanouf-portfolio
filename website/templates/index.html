@@ -158,21 +158,15 @@
             <a href="#contact" data-en="/ CONTACT" data-ar="/ تواصل">/ CONTACT</a>
         </div>
 
-        <div class="flex items-center gap-2 sm:gap-4">
-            <button onclick="initiateTimeTravel()" 
-                class="flex items-center justify-center gap-1 bg-[#EB3678]/10 text-[#EB3678] border border-[#EB3678]/40 px-2 py-1.5 md:px-4 md:py-2 text-[10px] font-black rounded-lg hover:bg-[#EB3678] hover:text-white transition-all active:scale-90">
-                <span class="text-xs md:text-sm">⌛</span>
-                <span class="hidden md:inline">2005</span>
+        <div class="flex items-center gap-4">
+            <button onclick="initiateTimeTravel()" class="hidden md:block bg-[#EB3678]/10 text-[#EB3678] border border-[#EB3678] px-4 py-2 text-[9px] font-black rounded hover:bg-[#EB3678] hover:text-white transition-all">
+                ⌛ REVERT_TO_2005
             </button>
-        
-            <button onclick="toggleTheme()" class="p-2 md:p-3 bg-black/5 dark:bg-white/5 rounded-xl hover:bg-[#EB3678]/10 transition-colors">
-                <svg class="w-4 h-4 md:w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            </button>
-        
-            <button onclick="toggleLang()" id="lang-btn" class="border border-[#EB3678] px-3 py-1 text-[9px] md:text-[10px] font-black rounded-md hover:bg-[#EB3678] hover:text-white transition-all">AR</button>
+            <button onclick="toggleTheme()" class="p-3 bg-black/5 dark:bg-white/5 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
+            <button onclick="toggleLang()" id="lang-btn" class="border-2 border-[#EB3678] px-5 py-1 text-[10px] font-black rounded-md">AR</button>
             
-            <button id="mobile-nav-toggle" class="lg:hidden p-2 text-[#EB3678]" onclick="toggleMobileMenu()">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <button id="mobile-nav-toggle" class="lg:hidden text-[#EB3678]" onclick="document.getElementById('nav-links').classList.toggle('hidden'); document.getElementById('nav-links').classList.toggle('flex'); document.getElementById('nav-links').classList.toggle('flex-col'); document.getElementById('nav-links').classList.toggle('absolute'); document.getElementById('nav-links').classList.toggle('top-20'); document.getElementById('nav-links').classList.toggle('left-0'); document.getElementById('nav-links').classList.toggle('w-full'); document.getElementById('nav-links').classList.toggle('bg-white'); document.getElementById('nav-links').classList.toggle('p-10');">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             </button>
         </div>
     </nav>
@@ -493,22 +487,7 @@
             }
             showNextMessage();
         }
-        function toggleMobileMenu() {
-        const nav = document.getElementById('nav-links');
-        // إضافة فئات الـ CSS برمجياً لجعلها تبدو كقائمة عصرية
-        nav.classList.toggle('hidden');
-        nav.classList.toggle('flex');
-        nav.classList.toggle('flex-col');
-        nav.classList.toggle('absolute');
-        nav.classList.toggle('top-full');
-        nav.classList.toggle('left-0');
-        nav.classList.toggle('w-full');
-        nav.classList.toggle('bg-white');
-        nav.classList.toggle('dark:bg-[#050112]');
-        nav.classList.toggle('p-8');
-        nav.classList.toggle('border-b');
-        nav.classList.toggle('border-[#EB3678]/20');
-    }
+
         window.onload = () => {
             updateExperienceUI();
             initProjects();
