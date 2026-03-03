@@ -81,21 +81,18 @@
             box-shadow: 0 0 10px var(--p); 
             will-change: transform;
         }
-        #mobile-menu {
-    /* تأثير متدرج خفيف من الزوايا */
-        background-image: radial-gradient(circle at center, rgba(235, 54, 120, 0.05) 0%, rgba(5, 1, 18, 0.95) 100%);
-        }
+       
 
-        /* حركة بسيطة للروابط عند فتح القائمة */
-        #mobile-menu a {
-            text-shadow: 0 0 15px rgba(235, 54, 120, 0);
-            transition: all 0.3s ease;
-        }
+    /* حركة بسيطة للروابط عند فتح القائمة */
+    #mobile-menu a {
+        text-shadow: 0 0 15px rgba(235, 54, 120, 0);
+        transition: all 0.3s ease;
+    }
 
-        #mobile-menu a:hover {
-            text-shadow: 0 0 15px rgba(235, 54, 120, 0.6);
-            transform: translateX(10px);
-        }
+    #mobile-menu a:hover {
+        text-shadow: 0 0 15px rgba(235, 54, 120, 0.6);
+        transform: translateX(10px);
+    }
         .bg-cyber-grid { background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px); background-size: 50px 50px; position: fixed; inset: 0; z-index: -2; }
         .explorer-container { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; display: grid; grid-template-columns: 280px 1fr; height: 650px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
         .explorer-sidebar { background: #161b22; border-right: 1px solid #30363d; padding: 20px 0; overflow-y: auto; }
