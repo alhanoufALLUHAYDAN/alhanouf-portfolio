@@ -29,59 +29,101 @@
             --glow: rgba(235, 54, 120, 0.3);
         }
 
-        body { background: var(--bg); color: var(--text-color); overflow-x: hidden; transition: background 0.5s ease; font-family: 'Orbitron', sans-serif; cursor: none; }
+        /* شاشة الانتقال الزمني - Terminal */
+        #time-travel-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: #00ff00;
+            padding: 40px;
+            cursor: none;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff00;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- إخفاء الماوس الأصلي --- */
+        html, body, a, button, input, textarea, [role="button"], .project-tab {
+            cursor: none !important;
+        }
+
+        body { background: var(--bg); color: var(--text-color); overflow-x: hidden; transition: background 0.5s ease; font-family: 'Orbitron', sans-serif; }
         
-        /* Custom Cursor */
-        #cursor { width: 40px; height: 40px; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; display: flex; align-items: center; justify-content: center; will-change: transform; transition: opacity 0.3s; }
+        #cursor { 
+            width: 40px; height: 40px; 
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+            will-change: transform;
+        }
         .cursor-corner { position: absolute; width: 8px; height: 8px; border-color: var(--p); border-style: solid; }
         .tl { top: 0; left: 0; border-width: 2px 0 0 2px; } .tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
         .bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; } .br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-        #cursor-inner { width: 6px; height: 6px; background: var(--o); position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 10000; pointer-events: none; box-shadow: 0 0 10px var(--p); will-change: transform; }
-
-        .bg-cyber-grid { background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px); background-size: 50px 50px; position: fixed; inset: 0; z-index: -2; }
         
-        /* Explorer Module Styles */
+        #cursor-inner { 
+            width: 6px; height: 6px; 
+            background: var(--o); position: fixed; top: 0; left: 0;
+            border-radius: 50%; z-index: 10000; pointer-events: none; 
+            box-shadow: 0 0 10px var(--p); 
+            will-change: transform;
+        }
+        
+        .bg-cyber-grid { background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px); background-size: 50px 50px; position: fixed; inset: 0; z-index: -2; }
         .explorer-container { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; display: grid; grid-template-columns: 280px 1fr; height: 650px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
         .explorer-sidebar { background: #161b22; border-right: 1px solid #30363d; padding: 20px 0; overflow-y: auto; }
-        .project-tab { padding: 12px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8b949e; display: flex; align-items: center; gap: 10px; transition: 0.2s; border-left: 2px solid transparent; cursor: none !important; }
+        .project-tab { padding: 12px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #8b949e; display: flex; align-items: center; gap: 10px; transition: 0.2s; border-left: 2px solid transparent; }
         .project-tab.active { background: #21262d; color: var(--p); border-left: 2px solid var(--p); }
-        .explorer-content { display: grid; grid-template-columns: 1.2fr 1fr; background: #0d1117; height: 100%; }
-        .code-view { padding: 30px; font-family: 'JetBrains Mono', monospace; color: #c9d1d9; overflow-y: auto; }
-        .preview-view { background: #010409; border-left: 1px solid #30363d; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .project-image-container { width: 100%; height: 80%; border-radius: 12px; overflow: hidden; transform: perspective(1000px) rotateY(-5deg); box-shadow: 20px 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .explorer-content { display: grid; grid-template-columns: 1.2fr 1fr; background: #0d1117; }
+        .code-view { padding: 30px; font-family: 'JetBrains Mono', monospace; color: #c9d1d9; overflow-y: auto; display: flex; flex-direction: column; }
+        .preview-view { background: #010409; border-left: 1px solid #30363d; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
+        .project-image-container { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; transform: perspective(1000px) rotateY(-5deg); box-shadow: 20px 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
         .project-image-container img { width: 100%; height: 100%; object-fit: cover; }
-
         .glass-module { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 20px; transition: all 0.4s; }
-        .skill-tag { font-family: 'JetBrains Mono'; font-size: 11px; padding: 6px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: rgba(0,0,0,0.03); }
-        .btn-glitch { background: linear-gradient(45deg, var(--p), var(--o)); color: white; padding: 16px 40px; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); font-size: 11px; font-weight: 900; letter-spacing: 3px; display: inline-block; text-align: center; transition: transform 0.2s; }
-        .btn-glitch:hover { transform: scale(1.05); }
-
-        .contact-input { background: transparent; border: none; border-bottom: 1px solid rgba(235, 54, 120, 0.3); color: var(--p); font-family: 'JetBrains Mono'; width: 100%; padding: 12px 0; outline: none; transition: 0.3s; }
+        .skill-tag { font-family: 'JetBrains Mono'; font-size: 11px; padding: 6px 14px; border: 1px solid var(--border-color); border-radius: 8px; display: inline-block; background: rgba(0,0,0,0.03); }
+        .btn-glitch { background: linear-gradient(45deg, var(--p), var(--o)); color: white; padding: 16px 40px; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%); font-size: 11px; font-weight: 900; letter-spacing: 3px; display: inline-block; text-align: center; }
+        .arabic-text { font-family: 'Cairo', sans-serif !important; }
+        .contact-input { background: transparent; border: none; border-bottom: 1px solid rgba(235, 54, 120, 0.3); color: var(--p); font-family: 'JetBrains Mono'; width: 100%; padding: 10px 0; outline: none; transition: 0.3s; }
         .contact-input:focus { border-bottom: 1px solid var(--o); }
 
-        /* Arabic Support */
-        .arabic-text { font-family: 'Cairo', sans-serif !important; }
-
-        /* Time Travel Terminal */
-        #time-travel-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; color: #00ff00; padding: 40px; cursor: none; }
-        .terminal-cursor { display: inline-block; width: 10px; height: 20px; background: #00ff00; animation: blink 0.8s infinite; vertical-align: middle; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* Responsive Fixes */
+        /* ============================================================
+           إضافات الـ Responsive (بدون تعديل الأكواد الأصلية أعلاه) 
+           ============================================================= */
+        
         @media (max-width: 1024px) {
-            body { cursor: auto; }
-            #cursor, #cursor-inner { display: none !important; }
             .explorer-container { grid-template-columns: 1fr; height: auto; }
             .explorer-sidebar { display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid #30363d; padding: 10px; }
-            .project-tab { border-left: none !important; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer !important; }
+            .project-tab { border-left: none !important; border-bottom: 2px solid transparent; white-space: nowrap; }
             .project-tab.active { border-bottom: 2px solid var(--p); }
-            .explorer-content { grid-template-columns: 1fr; height: auto; }
-            .preview-view { display: none; }
+            .explorer-content { grid-template-columns: 1fr; }
+            .preview-view { display: none; } /* المعاينة تختفي في الجوال لتركيز المساحة */
+            #cursor, #cursor-inner { display: none !important; } /* الماوس المخصص يختفي في اللمس */
+            html, body, a, button { cursor: auto !important; }
         }
 
         @media (max-width: 768px) {
-            .hero-title { font-size: 3rem !important; line-height: 1.1 !important; }
+            .hero-title { font-size: 3rem !important; }
             section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+            .nav-links-container { display: none; } /* سنحتاج لزر جوال */
+        }
+
+        /* تنسيق لزر القائمة في الجوال */
+        #mobile-nav-toggle { display: none; }
+        @media (max-width: 1024px) {
+            #mobile-nav-toggle { display: block; }
         }
     </style>
 </head>
@@ -89,7 +131,8 @@
 
     <div id="time-travel-overlay">
         <div class="max-w-4xl w-full">
-            <div id="terminal-content" class="text-sm md:text-xl font-mono leading-relaxed"></div>
+            <div id="terminal-content" class="text-sm md:text-xl font-mono leading-relaxed">
+                </div>
             <span class="terminal-cursor"></span>
         </div>
     </div>
@@ -99,10 +142,11 @@
         <div class="cursor-corner bl"></div><div class="cursor-corner br"></div>
     </div>
     <div id="cursor-inner"></div>
+    
     <div class="bg-cyber-grid"></div>
 
     <nav class="fixed top-0 w-full z-[100] px-4 md:px-12 py-5 flex justify-between items-center backdrop-blur-xl border-b border-black/5 dark:border-white/5">
-        <div class="text-xl font-black tracking-tighter flex items-center gap-2">
+        <div class="text-xl font-black tracking-tighter flex items-center gap-2 shrink-0">
             <svg class="w-8 h-8 text-[#EB3678]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
             <span class="text-[#EB3678]">ALHANOUF</span><span class="opacity-40 hidden xs:inline">.ENG</span>
         </div>
@@ -114,22 +158,25 @@
             <a href="#contact" data-en="/ CONTACT" data-ar="/ تواصل">/ CONTACT</a>
         </div>
     
-        <div class="flex items-center gap-2 md:gap-4">
-            <button onclick="initiateTimeTravel()" class="bg-[#EB3678]/10 text-[#EB3678] border border-[#EB3678] px-3 py-2 text-[10px] font-black rounded hover:bg-[#EB3678] hover:text-white transition-all flex items-center gap-2">
-                <span>⌛</span><span class="hidden sm:inline">REVERT_TO_2005</span>
-            </button>
-            <button onclick="toggleTheme()" class="p-2 bg-black/5 dark:bg-white/5 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
-            <button onclick="toggleLang()" id="lang-btn" class="border-2 border-[#EB3678] px-3 py-1 text-[10px] font-black rounded-md">AR</button>
-            <button class="lg:hidden text-[#EB3678]" onclick="toggleMobileMenu()">
-                <svg id="menu-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </div>
-
-        <div id="mobile-menu" class="hidden fixed inset-0 top-20 bg-white dark:bg-[#050112] z-50 flex-col p-10 gap-8 font-mono text-sm font-bold">
+        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 top-20 bg-white dark:bg-[#050112] z-50 flex-col p-10 gap-8 font-mono text-sm font-bold">
             <a href="#about" onclick="toggleMobileMenu()">/ OVERVIEW</a>
             <a href="#projects" onclick="toggleMobileMenu()">/ NEURAL_ARCHIVE</a>
             <a href="#experience" onclick="toggleMobileMenu()">/ EXPERIENCE</a>
             <a href="#contact" onclick="toggleMobileMenu()">/ CONTACT</a>
+        </div>
+    
+        <div class="flex items-center gap-2 md:gap-4">
+            <button onclick="initiateTimeTravel()" class="bg-[#EB3678]/10 text-[#EB3678] border border-[#EB3678] px-3 py-2 text-[10px] font-black rounded hover:bg-[#EB3678] hover:text-white transition-all flex items-center gap-2">
+                <span>⌛</span>
+                <span class="hidden sm:inline">REVERT_TO_2005</span>
+            </button>
+    
+            <button onclick="toggleTheme()" class="p-2 bg-black/5 dark:bg-white/5 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
+            <button onclick="toggleLang()" id="lang-btn" class="border-2 border-[#EB3678] px-3 py-1 text-[10px] font-black rounded-md">AR</button>
+            
+            <button id="mobile-nav-toggle" class="lg:hidden text-[#EB3678] p-1" onclick="toggleMobileMenu()">
+                <svg id="menu-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
         </div>
     </nav>
 
@@ -159,7 +206,7 @@
                     </div>
                     <div class="border-t border-white/10 pt-4">
                         <div id="code-header" class="text-[10px] mb-4 opacity-30 font-mono italic"></div>
-                        <div id="code-body" class="space-y-1 text-sm md:text-base"></div>
+                        <div id="code-body" class="space-y-1"></div>
                     </div>
                 </div>
                 <div class="preview-view">
@@ -222,12 +269,43 @@
             <div>
                 <h2 class="text-5xl md:text-7xl font-black uppercase mb-8" id="title-contact">Establish_ Connection</h2>
                 <p class="text-lg opacity-60 font-mono mb-12" id="contact-desc">{{ settings.contact_desc_en }}</p>
-                <div class="flex gap-6">
-                    {% if settings.linkedin_url %}<a href="{{ settings.linkedin_url }}" target="_blank" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all shadow-[0_0_15px_rgba(235,54,120,0.2)]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>{% endif %}
-                    {% if settings.github_url %}<a href="{{ settings.github_url }}" target="_blank" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all shadow-[0_0_15px_rgba(235,54,120,0.2)]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>{% endif %}
+                
+                <div class="flex flex-wrap gap-6 mt-6">
+                    {% if settings.linkedin_url %}
+                    <a href="{{ settings.linkedin_url }}" target="_blank" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(235,54,120,0.2)]">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    {% endif %}
+                
+                    {% if settings.twitter_url %}
+                    <a href="{{ settings.twitter_url }}" target="_blank" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(235,54,120,0.2)]">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    {% endif %}
+                
+                    {% if settings.contact_email %}
+                    <a href="mailto:{{ settings.contact_email }}" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(235,54,120,0.2)]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </a>
+                    {% endif %}
+                
+                    {% if settings.github_url %}
+                    <a href="{{ settings.github_url }}" target="_blank" class="w-12 h-12 rounded-full border border-[#EB3678] flex items-center justify-center text-[#EB3678] hover:bg-[#EB3678] hover:text-white transition-all duration-300 shadow-[0_0_15px_rgba(235,54,120,0.2)]">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
+
             <div class="glass-module p-8 border border-[#EB3678]/30">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="mb-6 p-4 text-[10px] font-mono border {% if message.tags == 'success' %}border-[#EB3678] text-[#EB3678]{% else %}border-red-500 text-red-500{% endif %} bg-white/5 animate-pulse">
+                        >> SYSTEM_MESSAGE: {{ message|upper }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
                 <form method="POST" action="#contact" class="space-y-6">
                     {% csrf_token %}
                     <input type="text" name="name" placeholder="IDENTIFY_SELF" class="contact-input" required>
@@ -244,7 +322,7 @@
     </footer>
 
     <script>
-        // Projects Data
+        // Projects & Translation Data
         const projects = [
             {% for p in projects %}
             {
@@ -266,7 +344,7 @@
                 tS: "Technical_Arsenal", tC: "Establish_ Connection", cD: `{{ settings.contact_desc_en|safe }}`, btn: "AR"
             },
             ar: {
-                hT: `{{ settings.hero_title_ar|safe }}`, hD: `{{ settings.hero_desc_ar|safe }}`, hB: "فحص_الملف",
+                hT: `{{ settings.hero_title_ar|safe }}`, hD: `{{ settings.hero_desc_ar|safe }}`, hB: "فحص_الملف_الشخصي",
                 tP: "الأرشيف_العصبي", tX: "01. سجلات التشغيل", tE: "02. قاعدة المعرفة",
                 tS: "الترسانة_التقنية", tC: "إنشاء_اتصال", cD: `{{ settings.contact_desc_ar|safe }}`, btn: "EN"
             }
@@ -301,16 +379,41 @@
             });
             document.querySelectorAll('.exp-details, .edu-details').forEach(el => {
                 const raw = el.getAttribute(`data-${currentLang}`);
-                if (raw && raw !== "None") {
+                if (raw && raw !== "None" && raw.trim() !== "") {
                     el.innerHTML = raw.split('|').map(point => `<li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#EB3678] mt-1.5 shrink-0"></span><span>${point.trim()}</span></li>`).join('');
-                }
+                } else { el.innerHTML = ''; }
             });
         }
 
         function initProjects() {
             const list = document.getElementById('project-list');
+            const explorerContent = document.getElementById('explorer-content');
             if(!list) return;
             list.innerHTML = '';
+
+            if (projects.length === 0) {
+                const emptyTitle = currentLang === 'ar' ? "أرشيف البيانات فارغ" : "NEURAL_ARCHIVE_EMPTY";
+                const emptyMsg = currentLang === 'ar' 
+                    ? "النظام جاهز لاستقبال البيانات. لم يتم العثور على سجلات نشطة في الأرشيف الحالي. يرجى محاولة الوصول في وقت لاحق."
+                    : "System ready for data injection. No active records found in the neural vault. Waiting for manual deployment.";
+
+                explorerContent.innerHTML = `
+                    <div class="col-span-2 flex flex-col items-center justify-center p-20 text-center bg-[#0d1117]">
+                        <div class="relative mb-10">
+                            <svg class="w-24 h-24 opacity-10 text-[#EB3678] animate-spin-slow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-16 h-16 border border-[#EB3678]/20 rounded-full animate-ping"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-light text-[#EB3678] mb-4 uppercase tracking-[0.5em]">${emptyTitle}</h3>
+                        <p class="font-mono text-[11px] opacity-40 max-w-xs leading-relaxed mb-8 tracking-wider">${emptyMsg}</p>
+                    </div>
+                `;
+                return;
+            }
+
             projects.forEach((p, index) => {
                 const div = document.createElement('div');
                 div.className = `project-tab ${index === 0 ? 'active' : ''}`;
@@ -326,13 +429,11 @@
             document.querySelectorAll('.project-tab').forEach(t => t.classList.remove('active'));
             element.classList.add('active');
             if(typingTimer) clearInterval(typingTimer);
-            
             const content = project[currentLang];
             document.getElementById('preview-title').innerText = content.title;
             document.getElementById('preview-desc').innerText = content.desc;
             document.getElementById('project-img').src = project.image;
             document.getElementById('code-header').innerText = `// SOURCE: ${project.name} | STACK: ${project.lang}`;
-            
             const target = document.getElementById('code-body');
             target.innerHTML = '';
             let currentPos = 0;
@@ -345,55 +446,76 @@
             }, 5);
         }
 
-        // Theme Toggle
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
         
-        // Mobile Menu
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('flex');
-        }
-
-        // Cursor Animation
+        // --- CUSTOM CURSOR ENGINE ---
         const cursor = document.getElementById('cursor');
         const dot = document.getElementById('cursor-inner');
+
         document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0 });
+            const x = e.clientX;
+            const y = e.clientY;
+            requestAnimationFrame(() => {
+                cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+                dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+            });
         });
 
-        // Time Travel Logic
+        // --- TIME TRAVEL PROTOCOL (Michael Scott Version) ---
+        const travelMessages = [
+            "CRITICAL_ALERT: Charisma levels exceeding 9000...",
+            "SYSTEM_OVERRIDE: Initiating Dunder Mifflin SCRANTON protocols.",
+            "Michael Scott: 'I am running away from my responsibilities. And it feels good.'",
+            "DELETING_FUTURE_JS_FRAMEWORKS... [OK]",
+            "Michael Scott: 'I’m an early bird and I’m a night owl. So I’m wise and I have worms.'",
+            "REVERTING_TO_2005_OFFICE_CULTURE...",
+            "Michael Scott: 'THAT'S WHAT SHE SAID!'",
+            "Access Granted. Redirecting to Scranton..."
+        ];
+
         function initiateTimeTravel() {
             const overlay = document.getElementById('time-travel-overlay');
             const content = document.getElementById('terminal-content');
             overlay.style.display = 'flex';
-            const messages = [
-                "SYSTEM_OVERRIDE: Initiating SCRANTON protocols.",
-                "Michael Scott: 'I am running away from my responsibilities.'",
-                "REVERTING_TO_2005_OFFICE_CULTURE...",
-                "Michael Scott: 'THAT'S WHAT SHE SAID!'",
-                "Access Granted. Redirecting..."
-            ];
+            
             let i = 0;
-            function showNext() {
-                if (i < messages.length) {
+            function showNextMessage() {
+                if (i < travelMessages.length) {
                     const p = document.createElement('p');
-                    p.innerHTML = `<span class="text-white">>></span> ${messages[i]}`;
+                    p.className = "mb-2 opacity-0";
+                    p.innerHTML = `<span class="text-white">>></span> ${travelMessages[i]}`;
                     content.appendChild(p);
+                    gsap.to(p, { opacity: 1, duration: 0.3 });
                     i++;
-                    setTimeout(showNext, 800);
+                    setTimeout(showNextMessage, 1000 + Math.random() * 500);
                 } else {
-                    window.location.href = "{% url 'office' %}";
+                    setTimeout(() => {
+                        window.location.href = "{% url 'office' %}";
+                    }, 1000);
                 }
             }
-            showNext();
+            showNextMessage();
         }
-
+        function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+        
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            menu.classList.add('flex');
+            // تغيير شكل الأيقونة إلى X عند الفتح
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        } else {
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+            // إعادة شكل الأيقونة إلى "همبرغر"
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
+        }
+    }
         window.onload = () => {
             updateExperienceUI();
             initProjects();
-            gsap.from(".hero-title", { opacity: 0, y: 50, duration: 1, ease: "power4.out" });
+            gsap.from(".hero-title", { opacity: 0, y: 50, duration: 1 });
         };
     </script>
 </body>
