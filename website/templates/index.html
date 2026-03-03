@@ -44,7 +44,22 @@
             padding: 40px;
             cursor: none;
         }
+        /* تحسين قائمة الجوال */
+        #mobile-menu {
+            /* جعل التدرج اللوني متوافق مع الهوية */
+            background: radial-gradient(circle at center, rgba(235, 54, 120, 0.1) 0%, var(--bg) 100%);
+        }
 
+        #mobile-menu a {
+            position: relative;
+            text-shadow: 0 0 10px rgba(235, 54, 120, 0.3);
+        }
+
+        /* حركة بسيطة عند الضغط على الروابط */
+        #mobile-menu a:active {
+            color: var(--o);
+            transform: scale(0.95);
+        }
         .terminal-cursor {
             display: inline-block;
             width: 10px;
@@ -158,11 +173,13 @@
             <a href="#contact" data-en="/ CONTACT" data-ar="/ تواصل">/ CONTACT</a>
         </div>
     
-        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 top-20 bg-white dark:bg-[#050112] z-50 flex-col p-10 gap-8 font-mono text-sm font-bold">
-            <a href="#about" onclick="toggleMobileMenu()">/ OVERVIEW</a>
-            <a href="#projects" onclick="toggleMobileMenu()">/ NEURAL_ARCHIVE</a>
-            <a href="#experience" onclick="toggleMobileMenu()">/ EXPERIENCE</a>
-            <a href="#contact" onclick="toggleMobileMenu()">/ CONTACT</a>
+        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-50 flex-col items-center justify-center gap-10 font-mono text-xl font-black tracking-widest transition-all duration-500 bg-[#050112]/95 backdrop-blur-2xl border-b border-[#EB3678]/20">
+            <a href="#about" class="hover:text-[#EB3678] transition-colors" onclick="toggleMobileMenu()">/ OVERVIEW</a>
+            <a href="#projects" class="hover:text-[#EB3678] transition-colors" onclick="toggleMobileMenu()">/ NEURAL_ARCHIVE</a>
+            <a href="#experience" class="hover:text-[#EB3678] transition-colors" onclick="toggleMobileMenu()">/ EXPERIENCE</a>
+            <a href="#contact" class="hover:text-[#EB3678] transition-colors" onclick="toggleMobileMenu()">/ CONTACT</a>
+            
+            <div class="absolute bottom-10 opacity-20 text-[10px]">SYSTEM_STATUS: ONLINE</div>
         </div>
     
         <div class="flex items-center gap-2 md:gap-4">
@@ -497,21 +514,22 @@
             showNextMessage();
         }
         function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.getElementById('menu-icon');
-        
-        if (menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
-            menu.classList.add('flex');
-            // تغيير شكل الأيقونة إلى X عند الفتح
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-        } else {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex');
-            // إعادة شكل الأيقونة إلى "همبرغر"
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            const isHidden = menu.classList.contains('hidden');
+            
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+                document.body.style.overflow = 'hidden'; // منع السكرول عند فتح المنيو
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+                document.body.style.overflow = ''; // إعادة السكرول
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
+            }
         }
-    }
         window.onload = () => {
             updateExperienceUI();
             initProjects();
