@@ -81,24 +81,7 @@
             box-shadow: 0 0 10px var(--p); 
             will-change: transform;
         }
-        /* تنسيق روابط الجوال */
-.mobile-link {
-    color: var(--text-color);
-    letter-spacing: 0.2em;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.mobile-link:hover {
-    color: var(--p);
-    transform: scale(1.1);
-    text-shadow: 0 0 15px var(--p);
-}
-
-/* تعديل خلفية المنيو لتكون متدرجة */
-#mobile-menu {
-    background-image: radial-gradient(circle at center, rgba(235, 54, 120, 0.05) 0%, rgba(5, 1, 18, 0.98) 100%);
-}
+        
         .bg-cyber-grid { background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px); background-size: 50px 50px; position: fixed; inset: 0; z-index: -2; }
         .explorer-container { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; display: grid; grid-template-columns: 280px 1fr; height: 650px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
         .explorer-sidebar { background: #161b22; border-right: 1px solid #30363d; padding: 20px 0; overflow-y: auto; }
@@ -142,6 +125,20 @@
         @media (max-width: 1024px) {
             #mobile-nav-toggle { display: block; }
         }
+        @media (max-width: 768px) {
+    .bg-cyber-grid {
+        display: none;
+    }
+}
+#mobile-menu {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+#mobile-menu:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
     </style>
 </head>
 <body class="pt-20">
@@ -175,25 +172,17 @@
             <a href="#contact" data-en="/ CONTACT" data-ar="/ تواصل">/ CONTACT</a>
         </div>
     
-        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-50 flex-col items-center justify-center p-10 gap-10 font-mono text-xl font-black bg-[#050112]/90 backdrop-blur-2xl border-b border-[#EB3678]/20">
-            <div class="bg-cyber-grid absolute inset-0 opacity-20 -z-10"></div>
-            
-            <a href="#about" class="mobile-link group" onclick="toggleMobileMenu()">
-                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">01. </span>/ OVERVIEW
-            </a>
-            <a href="#projects" class="mobile-link group" onclick="toggleMobileMenu()">
-                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">02. </span>/ NEURAL_ARCHIVE
-            </a>
-            <a href="#experience" class="mobile-link group" onclick="toggleMobileMenu()">
-                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">03. </span>/ EXPERIENCE
-            </a>
-            <a href="#contact" class="mobile-link group" onclick="toggleMobileMenu()">
-                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">04. </span>/ CONTACT
-            </a>
+        <div id="mobile-menu" 
+        class="fixed inset-0 top-20 z-50 hidden 
+        flex flex-col items-center justify-center 
+        gap-10 font-mono text-lg font-black tracking-widest
+        transition-all duration-300"
+        style="background: var(--bg); backdrop-filter: blur(20px);">
         
-            <div class="absolute bottom-10 text-[10px] tracking-[0.5em] opacity-30 text-[#EB3678]">
-                SYSTEM_ACCESS_GRANTED
-            </div>
+            <a href="#about" onclick="toggleMobileMenu()" class="hover:text-[#EB3678] transition">/ OVERVIEW</a>
+            <a href="#projects" onclick="toggleMobileMenu()" class="hover:text-[#EB3678] transition">/ NEURAL_ARCHIVE</a>
+            <a href="#experience" onclick="toggleMobileMenu()" class="hover:text-[#EB3678] transition">/ EXPERIENCE</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="hover:text-[#EB3678] transition">/ CONTACT</a>
         </div>
     
         <div class="flex items-center gap-2 md:gap-4">
@@ -529,24 +518,7 @@
         }
         function toggleMobileMenu() {
     const menu = document.getElementById('mobile-menu');
-    const icon = document.getElementById('menu-icon');
-    const isHidden = menu.classList.contains('hidden');
-    
-    if (isHidden) {
-        menu.classList.remove('hidden');
-        menu.classList.add('flex');
-        // منع التمرير في الخلفية
-        document.body.style.overflow = 'hidden';
-        // تغيير الأيقونة إلى X
-        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-    } else {
-        menu.classList.add('hidden');
-        menu.classList.remove('flex');
-        // إعادة التمرير
-        document.body.style.overflow = 'auto';
-        // إعادة الأيقونة لثلاث خطوط
-        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
-    }
+    menu.classList.toggle('hidden');
 }
         window.onload = () => {
             updateExperienceUI();
