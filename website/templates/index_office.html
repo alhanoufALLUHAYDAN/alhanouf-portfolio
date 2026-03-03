@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr" id="main-html">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ settings.hero_title_en|striptags }} | DUNDER MIFFLIN ARCHITECT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Roboto+Slab:wght@300;700;900&family=Special+Elite&family=Cairo:wght@400;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -38,14 +38,11 @@
         .glitch-load { font-size: 1.2rem; letter-spacing: 4px; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        /* التحكم في الماوس - يظهر فقط في الديسك توب */
-        @media (min-pointer: fine) {
+        /* التحكم في الماوس - يظهر فقط في الكمبيوتر لمنع مشاكل اللمس */
+        @media (hover: hover) {
             html, body, a, button, input, textarea, .folder-tab { cursor: none !important; }
             #cursor-dot { width: 8px; height: 8px; background: var(--dunder-blue); position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 10000; pointer-events: none; will-change: transform; }
             #cursor-outline { width: 30px; height: 30px; border: 1px solid var(--dunder-blue); position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; will-change: transform; }
-        }
-        @media (pointer: coarse) {
-            #cursor-dot, #cursor-outline { display: none !important; }
         }
 
         body { 
@@ -56,10 +53,9 @@
                               linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 30px 30px;
             overflow-x: hidden;
-            width: 100%;
         }
 
-        .typewriter { font-family: 'Special Elite', cursive; word-break: break-word; }
+        .typewriter { font-family: 'Special Elite', cursive; }
         .arabic-text { font-family: 'Cairo', sans-serif !important; }
         
         .office-card { background: white; border: 1px solid #ddd; border-bottom: 4px solid #bbb; border-radius: 3px; transition: all 0.3s ease; }
@@ -68,7 +64,29 @@
         .btn-office { background: var(--dunder-blue); color: white; padding: 12px 25px; font-family: 'Courier Prime', monospace; font-weight: bold; text-transform: uppercase; box-shadow: 4px 4px 0px #001a33; transition: 0.1s; display: inline-block; text-align: center; }
         .btn-office:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #001a33; }
 
-        .folder-tab { background: var(--folder-tan); padding: 10px 20px; border-radius: 10px 10px 0 0; display: inline-block; font-weight: bold; font-size: 12px; border: 1px solid #ccc; border-bottom: none; margin-right: 5px; white-space: nowrap; }
+        /* تعديل التبويبات لتكون متجاوبة */
+        #project-list {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            border-bottom: 1px solid #ddd;
+        }
+        #project-list::-webkit-scrollbar { display: none; }
+
+        .folder-tab { 
+            background: var(--folder-tan); 
+            padding: 10px 20px; 
+            border-radius: 10px 10px 0 0; 
+            display: inline-block; 
+            font-weight: bold; 
+            font-size: 12px; 
+            border: 1px solid #ccc; 
+            border-bottom: none; 
+            margin-right: 5px;
+            flex: 0 0 auto;
+        }
         .folder-tab.active { background: white; padding-top: 15px; margin-top: -5px; color: var(--dunder-blue); border-top: 3px solid var(--dunder-blue); }
 
         .social-tag { font-family: 'Courier Prime', monospace; font-size: 10px; padding: 2px 8px; border: 1px solid #ddd; background: #f9f9f9; color: var(--dunder-blue); transition: 0.2s; }
@@ -84,31 +102,36 @@
         }
         #office-toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* ميزة التمرير للأقسام في الجوال */
-        #project-list { overflow-x: auto; -webkit-overflow-scrolling: touch; display: flex; scrollbar-width: none; }
-        #project-list::-webkit-scrollbar { display: none; }
-
-        /* Menu Mobile */
-        #mobile-menu-btn { display: none; }
-        @media (max-width: 1024px) {
-            #nav-links { display: none; }
-            #mobile-menu-btn { display: block; }
-            .hero-title-responsive { font-size: 3.5rem !important; }
+        /* Mobile Menu */
+        #mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-bottom: 4px solid var(--dunder-blue);
+            z-index: 90;
+            padding: 20px;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
         }
+        #mobile-nav.active { display: flex; }
     </style>
 </head>
-<body class="pt-24">
+<body class="pt-24 md:pt-32">
 
     <div id="return-overlay">
         <div class="glitch-load">EXITING_SIMULATION...</div>
         <div id="cyber-status" class="mt-4 font-mono text-[10px] uppercase tracking-widest opacity-70"></div>
     </div>
 
-    <div id="cursor-dot"></div>
-    <div id="cursor-outline"></div>
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-outline" class="hidden md:block"></div>
 
     <div id="office-toast">
-        <div class="bg-white border-2 border-[--dunder-blue] shadow-[8px_8px_0px_rgba(0,51,102,1)] p-4 flex items-center gap-4 min-w-[320px] max-w-[90vw]">
+        <div class="bg-white border-2 border-[--dunder-blue] shadow-[8px_8px_0px_rgba(0,51,102,1)] p-4 flex items-center gap-4 min-w-[320px]">
             <div class="bg-[--office-yellow] px-2 py-1 border border-black font-black text-[10px] uppercase">Memo_Sent</div>
             <p id="toast-message" class="text-xs font-bold text-[--dunder-blue] uppercase tracking-tighter"></p>
         </div>
@@ -116,7 +139,7 @@
 
     <nav class="fixed top-0 w-full z-[100] px-4 md:px-6 py-4 flex justify-between items-center bg-white border-b-4 border-[--dunder-blue] shadow-sm">
         <div class="flex items-center gap-3">
-            <div class="bg-[--dunder-blue] text-white px-3 py-1 font-black text-lg md:text-xl tracking-tighter">DUNDER MIFFLIN</div>
+            <div class="bg-[--dunder-blue] text-white px-3 py-1 font-black text-lg md:text-xl tracking-tighter shrink-0">DUNDER MIFFLIN</div>
             <div class="hidden lg:block border-l pl-3 border-gray-300 text-[9px] leading-none font-bold text-gray-500 uppercase">Inc. Paper Company<br>Scranton Branch</div>
         </div>
         
@@ -129,26 +152,35 @@
         </div>
 
         <div class="flex items-center gap-2 md:gap-3">
-            <button onclick="goBackToPresent()" class="bg-black text-white px-2 md:px-3 py-1 text-[9px] md:text-[10px] font-black border-2 border-black hover:bg-white hover:text-black transition-all uppercase">
-                2026_RETURN
+            <button onclick="goBackToPresent()" class="bg-black text-white px-2 md:px-3 py-1 text-[9px] md:text-[10px] font-black border-2 border-black hover:bg-white hover:text-black transition-all">
+                RETURN_2026
             </button>
-            <div class="hidden md:flex gap-2 mr-2">
-                {% if settings.github_url %}<a href="{{ settings.github_url }}" target="_blank" class="social-tag">GH</a>{% endif %}
-                {% if settings.linkedin_url %}<a href="{{ settings.linkedin_url }}" target="_blank" class="social-tag">LI</a>{% endif %}
-            </div>
             <button onclick="toggleLang()" id="lang-btn" class="border-2 border-[--dunder-blue] px-3 md:px-4 py-1 text-[10px] font-black hover:bg-[--dunder-blue] hover:text-white transition-all">AR</button>
+            <button class="lg:hidden text-[--dunder-blue]" onclick="document.getElementById('mobile-nav').classList.toggle('active')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
         </div>
     </nav>
 
-    <section id="about" class="min-h-[85vh] flex items-center px-6 md:px-24 py-12">
+    <div id="mobile-nav" class="font-bold uppercase text-xs text-gray-600">
+        <a href="#about" onclick="this.parentElement.classList.remove('active')">Personnel_File</a>
+        <a href="#projects" onclick="this.parentElement.classList.remove('active')">Warehouse</a>
+        <a href="#skills" onclick="this.parentElement.classList.remove('active')">Inventory</a>
+        <a href="#experience" onclick="this.parentElement.classList.remove('active')">History</a>
+        <a href="#contact" onclick="this.parentElement.classList.remove('active')">HR_Inbox</a>
+    </div>
+
+    <section id="about" class="min-h-[70vh] md:min-h-[85vh] flex items-center px-6 md:px-24 py-12">
         <div class="grid lg:grid-cols-2 gap-12 items-center w-full">
             <div class="text-center lg:text-left">
                 <div class="inline-block bg-[--office-yellow] text-black px-4 py-1 text-[10px] font-bold border border-black mb-6 uppercase">ID Card: Scranton_Branch</div>
-                <h1 class="text-5xl md:text-8xl font-black text-[--dunder-blue] leading-none mb-6 uppercase hero-title-responsive" id="hero-title">{{ settings.hero_title_en|safe }}</h1>
-                <p class="text-lg md:text-2xl typewriter leading-relaxed text-gray-700 border-l-4 md:border-l-8 border-[--office-yellow] pl-4 md:pl-6 mb-10" id="hero-desc">{{ settings.hero_desc_en|safe }}</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="#projects" class="btn-office" id="hero-btn">Open_Folder.exe</a>
-                    <a href="mailto:{{ settings.contact_email }}" class="btn-office bg-white !text-[--dunder-blue] border-2 border-[--dunder-blue] shadow-none">Email_Memo</a>
+                <h1 class="text-4xl md:text-6xl lg:text-8xl font-black text-[--dunder-blue] leading-none mb-6 uppercase" id="hero-title">{{ settings.hero_title_en|safe }}</h1>
+                <p class="text-lg md:text-2xl typewriter leading-relaxed text-gray-700 border-l-4 md:border-l-8 border-[--office-yellow] pl-4 md:pl-6 mb-10 mx-auto lg:mx-0 max-w-2xl" id="hero-desc">{{ settings.hero_desc_en|safe }}</p>
+                <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                    <a href="#projects" class="btn-office w-full sm:w-auto" id="hero-btn">Open_Folder.exe</a>
+                    <a href="mailto:{{ settings.contact_email }}" class="btn-office bg-white !text-[--dunder-blue] border-2 border-[--dunder-blue] shadow-none w-full sm:w-auto">Email_Memo</a>
                 </div>
             </div>
             <div class="hidden lg:flex justify-end">
@@ -157,18 +189,18 @@
         </div>
     </section>
 
-    <section id="projects" class="py-24 px-4 md:px-24 bg-gray-100">
-        <h2 class="text-3xl md:text-4xl font-black uppercase text-[--dunder-blue] mb-12 text-center lg:text-left" id="title-projects">The Filing Cabinet</h2>
-        <div class="bg-white p-2 border border-gray-300 shadow-xl overflow-hidden">
-            <div class="flex mb-[-1px]" id="project-list"></div>
-            <div id="project-main-content" class="border border-gray-300 p-4 md:p-8 min-h-[450px] relative">
+    <section id="projects" class="py-16 md:py-24 px-4 md:px-24 bg-gray-100">
+        <h2 class="text-2xl md:text-4xl font-black uppercase text-[--dunder-blue] mb-8 md:text-left text-center" id="title-projects">The Filing Cabinet</h2>
+        <div class="bg-white p-1 md:p-2 border border-gray-300 shadow-xl">
+            <div class="mb-[-1px]" id="project-list"></div>
+            <div id="project-main-content" class="border border-gray-300 p-4 md:p-8 min-h-[400px] relative">
             </div>
         </div>
     </section>
 
-    <section id="skills" class="py-24 px-6 md:px-24">
-        <h2 class="text-center text-3xl font-black mb-16 uppercase tracking-widest" id="title-skills">Technical_Supply_Closet</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section id="skills" class="py-16 md:py-24 px-6 md:px-24">
+        <h2 class="text-center text-2xl md:text-3xl font-black mb-12 md:mb-16 uppercase tracking-widest" id="title-skills">Technical_Supply_Closet</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {% for category, items in skills.items %}
             <div class="office-card p-6 bg-white relative">
                 <div class="absolute top-2 right-4 w-6 h-1 bg-gray-300 rounded-full"></div>
@@ -183,26 +215,26 @@
         </div>
     </section>
 
-    <section id="experience" class="py-24 px-6 md:px-24 bg-gray-100">
+    <section id="experience" class="py-16 md:py-24 px-6 md:px-24 bg-gray-100">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-black mb-16 uppercase tracking-widest text-center" id="title-exp">Employee Performance Review</h2>
-            <div class="space-y-16 relative before:absolute before:left-0 before:h-full before:w-1 before:bg-[--dunder-blue] pl-8">
+            <h2 class="text-2xl md:text-3xl font-black mb-12 md:mb-16 uppercase tracking-widest text-center" id="title-exp">Employee Performance Review</h2>
+            <div class="space-y-12 md:space-y-16 relative before:absolute before:left-0 before:h-full before:w-1 before:bg-[--dunder-blue] pl-6 md:pl-8">
                 {% for item in work_exp %}
                 <div class="relative">
-                    <div class="absolute -left-[41px] top-0 w-5 h-5 {% if item.type == 'work' %}bg-[--office-yellow]{% else %}bg-white border-2 border-[--dunder-blue]{% endif %}"></div>
+                    <div class="absolute -left-[29px] md:-left-[41px] top-0 w-4 md:h-5 md:w-5 h-4 {% if item.type == 'work' %}bg-[--office-yellow]{% else %}bg-white border-2 border-[--dunder-blue]{% endif %}"></div>
                     <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{{ item.get_type_display }}</div>
-                    <h3 class="text-xl font-bold exp-title" data-en="{{ item.title_en }}" data-ar="{{ item.title_ar }}">{{ item.title_en }}</h3>
-                    <p class="text-[--stapler-red] font-bold text-sm">{{ item.period }} | <span class="exp-org" data-en="{{ item.organization_en }}" data-ar="{{ item.organization_ar }}">{{ item.organization_en }}</span></p>
+                    <h3 class="text-lg md:text-xl font-bold exp-title" data-en="{{ item.title_en }}" data-ar="{{ item.title_ar }}">{{ item.title_en }}</h3>
+                    <p class="text-[--stapler-red] font-bold text-xs md:text-sm">{{ item.period }} | <span class="exp-org" data-en="{{ item.organization_en }}" data-ar="{{ item.organization_ar }}">{{ item.organization_en }}</span></p>
                     <div class="mt-3 text-gray-600 typewriter text-sm exp-details leading-relaxed" data-en="{{ item.details_en }}" data-ar="{{ item.details_ar }}"></div>
                 </div>
                 {% endfor %}
 
                 {% for item in edu_exp %}
                 <div class="relative pt-4">
-                    <div class="absolute -left-[41px] top-4 w-5 h-5 bg-white border-2 border-[--dunder-blue]"></div>
+                    <div class="absolute -left-[29px] md:-left-[41px] top-4 w-4 md:h-5 md:w-5 h-4 bg-white border-2 border-[--dunder-blue]"></div>
                     <div class="text-[9px] font-bold text-gray-400 uppercase mb-1">{{ item.get_type_display }}</div>
-                    <h3 class="text-xl font-bold exp-title" data-en="{{ item.title_en }}" data-ar="{{ item.title_ar }}">{{ item.title_en }}</h3>
-                    <p class="text-[--dunder-blue] font-bold text-sm">{{ item.period }} | <span class="exp-org" data-en="{{ item.organization_en }}" data-ar="{{ item.organization_ar }}">{{ item.organization_en }}</span></p>
+                    <h3 class="text-lg md:text-xl font-bold exp-title" data-en="{{ item.title_en }}" data-ar="{{ item.title_ar }}">{{ item.title_en }}</h3>
+                    <p class="text-[--dunder-blue] font-bold text-xs md:text-sm">{{ item.period }} | <span class="exp-org" data-en="{{ item.organization_en }}" data-ar="{{ item.organization_ar }}">{{ item.organization_en }}</span></p>
                     <div class="mt-3 text-gray-600 typewriter text-sm exp-details leading-relaxed" data-en="{{ item.details_en }}" data-ar="{{ item.details_ar }}"></div>
                 </div>
                 {% endfor %}
@@ -210,15 +242,14 @@
         </div>
     </section>
 
-    <section id="contact" class="py-24 px-6 md:px-24 bg-[--dunder-blue] text-white">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
+    <section id="contact" class="py-16 md:py-24 px-6 md:px-24 bg-[--dunder-blue] text-white">
+        <div class="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
             <div class="text-center lg:text-left">
-                <h2 class="text-4xl md:text-5xl font-black uppercase mb-6" id="title-contact">Talk To Toby<br>(Human Resources)</h2>
+                <h2 class="text-3xl md:text-5xl font-black uppercase mb-6" id="title-contact">Talk To Toby<br>(Human Resources)</h2>
                 <p class="typewriter text-blue-200 mb-8" id="contact-desc">{{ settings.contact_desc_en }}</p>
                 <div class="flex flex-wrap justify-center lg:justify-start gap-4">
-                    {% if settings.github_url %}<a href="{{ settings.github_url }}" class="bg-white/10 p-4 border border-white/20 hover:bg-[--office-yellow] hover:text-black transition-all font-bold">GITHUB_FILE</a>{% endif %}
-                    {% if settings.linkedin_url %}<a href="{{ settings.linkedin_url }}" class="bg-white/10 p-4 border border-white/20 hover:bg-[--office-yellow] hover:text-black transition-all font-bold">LINKEDIN_DOC</a>{% endif %}
-                    {% if settings.twitter_url %}<a href="{{ settings.twitter_url }}" class="bg-white/10 p-4 border border-white/20 hover:bg-[--office-yellow] hover:text-black transition-all font-bold">X_FEED</a>{% endif %}
+                    {% if settings.github_url %}<a href="{{ settings.github_url }}" class="bg-white/10 p-3 md:p-4 border border-white/20 hover:bg-[--office-yellow] hover:text-black transition-all font-bold text-xs">GITHUB_FILE</a>{% endif %}
+                    {% if settings.linkedin_url %}<a href="{{ settings.linkedin_url }}" class="bg-white/10 p-3 md:p-4 border border-white/20 hover:bg-[--office-yellow] hover:text-black transition-all font-bold text-xs">LINKEDIN_DOC</a>{% endif %}
                 </div>
             </div>
             
@@ -234,7 +265,7 @@
         </div>
     </section>
 
-    <footer class="py-12 text-center text-[9px] font-mono tracking-widest text-gray-400 uppercase px-4">
+    <footer class="py-12 text-center text-[9px] font-mono tracking-widest text-gray-400 uppercase">
         © 2026 {{ settings.hero_title_en|striptags }} // Dunder Mifflin Paper Company // Bears. Beets. Battlestar Galactica.
     </footer>
 
@@ -313,7 +344,10 @@
             document.getElementById('title-contact').innerText = data.tC;
             document.getElementById('contact-desc').innerText = data.cD;
             
-            document.querySelectorAll('#nav-links a').forEach(a => { a.innerText = a.getAttribute(`data-${currentLang}`); });
+            document.querySelectorAll('#nav-links a, #mobile-nav a').forEach(a => { 
+                const text = a.getAttribute(`data-${currentLang}`);
+                if(text) a.innerText = text; 
+            });
             document.querySelectorAll('.exp-title, .exp-org').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
             document.querySelectorAll('.exp-details').forEach(el => { 
                 const raw = el.getAttribute(`data-${currentLang}`);
@@ -332,7 +366,7 @@
                 mainContent.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full py-20 text-center">
                         <div class="text-6xl mb-6">📦</div>
-                        <h3 class="text-2xl font-black text-[--dunder-blue] mb-4 uppercase">${data.emptyTitle}</h3>
+                        <h3 class="text-xl md:text-2xl font-black text-[--dunder-blue] mb-4 uppercase">${data.emptyTitle}</h3>
                         <p class="typewriter text-gray-500 max-w-md italic border-l-4 border-gray-300 pl-4">${data.emptyMsg}</p>
                         <div class="mt-8 pt-4 border-t border-dashed border-gray-400 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                             ${data.signature}
@@ -358,16 +392,16 @@
             const content = p[currentLang];
             const mainContent = document.getElementById('project-main-content');
             mainContent.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                    <div class="order-2 lg:order-1 space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                    <div class="space-y-4 md:space-y-6 order-2 lg:order-1">
                         <h3 class="text-2xl md:text-3xl font-black text-gray-800">${content.title}</h3>
                         <p class="typewriter text-base md:text-lg text-gray-600">${content.desc}</p>
-                        <div class="font-mono text-[9px] md:text-[10px] p-4 bg-gray-900 text-green-400 rounded overflow-x-auto">
+                        <div class="font-mono text-[10px] p-4 bg-gray-900 text-green-400 rounded overflow-x-auto">
                             <pre>${p.code}</pre>
                         </div>
                     </div>
-                    <div class="order-1 lg:order-2 office-card overflow-hidden h-48 md:h-auto">
-                        <img src="${p.image}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all">
+                    <div class="office-card overflow-hidden h-48 md:h-auto order-1 lg:order-2">
+                        <img src="${p.image}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
                     </div>
                 </div>
             `;
@@ -406,18 +440,18 @@
             }
         });
 
-        // Mouse dot
-        const dot = document.getElementById('cursor-dot');
-        const outline = document.getElementById('cursor-outline');
-        document.addEventListener('mousemove', (e) => {
-            if(dot) {
+        // Mouse dot logic (Desktop only)
+        if (window.matchMedia("(hover: hover)").matches) {
+            const dot = document.getElementById('cursor-dot');
+            const outline = document.getElementById('cursor-outline');
+            document.addEventListener('mousemove', (e) => {
                 const x = e.clientX, y = e.clientY;
                 requestAnimationFrame(() => {
                     dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
                     outline.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
                 });
-            }
-        });
+            });
+        }
 
         window.onload = () => { toggleLang(); toggleLang(); };
     </script>
