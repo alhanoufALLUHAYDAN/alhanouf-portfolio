@@ -81,18 +81,24 @@
             box-shadow: 0 0 10px var(--p); 
             will-change: transform;
         }
-       
+        /* تنسيق روابط الجوال */
+.mobile-link {
+    color: var(--text-color);
+    letter-spacing: 0.2em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
 
-    /* حركة بسيطة للروابط عند فتح القائمة */
-    #mobile-menu a {
-        text-shadow: 0 0 15px rgba(235, 54, 120, 0);
-        transition: all 0.3s ease;
-    }
+.mobile-link:hover {
+    color: var(--p);
+    transform: scale(1.1);
+    text-shadow: 0 0 15px var(--p);
+}
 
-    #mobile-menu a:hover {
-        text-shadow: 0 0 15px rgba(235, 54, 120, 0.6);
-        transform: translateX(10px);
-    }
+/* تعديل خلفية المنيو لتكون متدرجة */
+#mobile-menu {
+    background-image: radial-gradient(circle at center, rgba(235, 54, 120, 0.05) 0%, rgba(5, 1, 18, 0.98) 100%);
+}
         .bg-cyber-grid { background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px); background-size: 50px 50px; position: fixed; inset: 0; z-index: -2; }
         .explorer-container { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; display: grid; grid-template-columns: 280px 1fr; height: 650px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
         .explorer-sidebar { background: #161b22; border-right: 1px solid #30363d; padding: 20px 0; overflow-y: auto; }
@@ -169,16 +175,24 @@
             <a href="#contact" data-en="/ CONTACT" data-ar="/ تواصل">/ CONTACT</a>
         </div>
     
-        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-50 flex-col items-center justify-center p-10 gap-10 font-mono text-lg font-black bg-[#050112]/80 backdrop-blur-2xl border-b border-[#EB3678]/20">
+        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-50 flex-col items-center justify-center p-10 gap-10 font-mono text-xl font-black bg-[#050112]/90 backdrop-blur-2xl border-b border-[#EB3678]/20">
             <div class="bg-cyber-grid absolute inset-0 opacity-20 -z-10"></div>
             
-            <a href="#about" class="hover:text-[#EB3678] tracking-[0.3em] transition-all" onclick="toggleMobileMenu()">/ OVERVIEW</a>
-            <a href="#projects" class="hover:text-[#EB3678] tracking-[0.3em] transition-all" onclick="toggleMobileMenu()">/ NEURAL_ARCHIVE</a>
-            <a href="#experience" class="hover:text-[#EB3678] tracking-[0.3em] transition-all" onclick="toggleMobileMenu()">/ EXPERIENCE</a>
-            <a href="#contact" class="hover:text-[#EB3678] tracking-[0.3em] transition-all" onclick="toggleMobileMenu()">/ CONTACT</a>
+            <a href="#about" class="mobile-link group" onclick="toggleMobileMenu()">
+                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">01. </span>/ OVERVIEW
+            </a>
+            <a href="#projects" class="mobile-link group" onclick="toggleMobileMenu()">
+                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">02. </span>/ NEURAL_ARCHIVE
+            </a>
+            <a href="#experience" class="mobile-link group" onclick="toggleMobileMenu()">
+                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">03. </span>/ EXPERIENCE
+            </a>
+            <a href="#contact" class="mobile-link group" onclick="toggleMobileMenu()">
+                <span class="text-[#EB3678] opacity-0 group-hover:opacity-100 transition-all">04. </span>/ CONTACT
+            </a>
         
-            <div class="absolute bottom-10 left-0 w-full text-center opacity-20 text-[8px] tracking-[1em] uppercase">
-                System_Interface_v2.0
+            <div class="absolute bottom-10 text-[10px] tracking-[0.5em] opacity-30 text-[#EB3678]">
+                SYSTEM_ACCESS_GRANTED
             </div>
         </div>
     
@@ -514,21 +528,26 @@
             showNextMessage();
         }
         function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.getElementById('menu-icon');
-        
-        if (menu.classList.contains('hidden')) {
-            menu.classList.remove('hidden');
-            menu.classList.add('flex');
-            // تغيير شكل الأيقونة إلى X عند الفتح
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-        } else {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex');
-            // إعادة شكل الأيقونة إلى "همبرغر"
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
-        }
+    const menu = document.getElementById('mobile-menu');
+    const icon = document.getElementById('menu-icon');
+    const isHidden = menu.classList.contains('hidden');
+    
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        menu.classList.add('flex');
+        // منع التمرير في الخلفية
+        document.body.style.overflow = 'hidden';
+        // تغيير الأيقونة إلى X
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+    } else {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex');
+        // إعادة التمرير
+        document.body.style.overflow = 'auto';
+        // إعادة الأيقونة لثلاث خطوط
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>';
     }
+}
         window.onload = () => {
             updateExperienceUI();
             initProjects();
