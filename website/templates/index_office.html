@@ -267,10 +267,11 @@
     </section>
 
     <footer class="py-12 text-center text-[9px] font-mono tracking-widest text-gray-400 uppercase">
-        © 2026 {{ settings.hero_title_en|striptags }} // Dunder Mifflin Paper Company // Bears. Beets. Battlestar Galactica.
+        © {% now "Y" %} {{ settings.hero_title_en|striptags }} // Dunder Mifflin Paper Company // Determined. Worker. Intense. Impressive.
     </footer>
 
     <script>
+        
         // دالة العودة للحاضر
         function goBackToPresent() {
             const overlay = document.getElementById('return-overlay');
