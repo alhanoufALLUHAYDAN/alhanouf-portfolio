@@ -105,7 +105,6 @@ def home(request):
         except Exception as e:
             messages.error(request, "ERROR: Connection failed.")
 
-    # --- جلب البيانات ---
     settings_data = SiteSettings.objects.first()
     projects = Project.objects.all().order_by('order')
     skills = {
